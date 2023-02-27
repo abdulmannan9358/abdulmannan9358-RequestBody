@@ -1,5 +1,6 @@
 
 
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 
@@ -20,12 +21,17 @@ public class JavalinSingleton {
          * 
          * Note: Please refer to the "RequestBody.MD" file for more assistance.
          */
-        app.post("/echo", ctx -> {
-            
+        //app.post("/echo", ctx -> {
+          //  String jsonString=ctx.body();
             //implement logic here
                 
+        //});
+        app.post("/echo", ctx -> {
+            String jsonString = ctx.body();
+            Song song = om.readValue(jsonString, Song.class);
+            ctx.contentType("application/json");
+            ctx.result(om.writeValueAsString(song));
         });
-
         /**
          * problem2: retrieve the song object from the request body...
          *      1. update the artist in the song object to "Beatles"
@@ -33,10 +39,13 @@ public class JavalinSingleton {
          * 
          * Note: Please refer to the "RequestBody.MD" file for more assistance.
          */
+        
         app.post("/changeartisttobeatles", ctx -> {
-
-            //implement logic here
-               
+            String jsonString = ctx.body();
+            Song song = om.readValue(jsonString, Song.class);
+            song.artistName("Beatles");
+            ctx.contentType("application/json");
+            ctx.result(om.writeValueAsString(song));
         });
 
 
